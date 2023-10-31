@@ -1,0 +1,40 @@
+{% set basic_types_mapping = {
+    'int': 'int32',
+    'float': 'single',
+    'double': 'double',
+    'char': 'char',
+    'string': 'string',
+    'uint8': 'uint8',
+    'int8': 'int8',
+    'uint16': 'uint16',
+    'int16': 'int16',
+    'uint32': 'uint32',
+    'int32': 'int32',
+    'uint64': 'uint64',
+    'int64': 'int64',
+    'boolean': 'logical'
+} %}
+
+classdef {{ name.strip() }}
+    properties
+{% for attribute in attributes %}
+        {%- if attribute['Multiplicity'] is not none and attribute['Multiplicity'] == attribute['Multiplicity'] %}
+        {{ attribute['Name'].strip() }} = zeros(1, {{ attribute['Multiplicity'] }});  % Type: {{ attribute['Type'] }}
+        {%- else %}
+        {{ attribute['Name'].strip() }};  % Type: {{ attribute['Type'] }}
+        {%- endif %}
+{% endfor %}
+    end
+    
+    methods
+        function obj = {{ name.strip() }}()
+{% for attribute in attributes %}
+            {%- if attribute['Multiplicity'] is not none and attribute['Multiplicity'] == attribute['Multiplicity'] %}
+            obj.{{ attribute['Name'].strip() }} = zeros(1, {{ attribute['Multiplicity'] }});
+            {%- else %}
+            % Initialize {{ attribute['Name'].strip() }}
+            {%- endif %}
+{% endfor %}
+        end
+    end
+end

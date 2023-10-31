@@ -1,0 +1,26 @@
+{% set basic_types_mapping = {
+    'int': 'int',
+    'float': 'float',
+    'double': 'float',
+    'char': 'str',
+    'string': 'str',
+    'uint8': 'int',
+    'int8': 'int',
+    'uint16': 'int',
+    'int16': 'int',
+    'uint32': 'int',
+    'int32': 'int',
+    'uint64': 'int',
+    'int64': 'int',
+    'boolean': 'bool'
+} %}
+
+class {{ name.strip() }}:
+    def __init__(self):
+{%- for attribute in attributes -%}
+        {%- if attribute['Multiplicity'] is not none and attribute['Multiplicity'] == attribute['Multiplicity'] %}
+        self.{{ attribute['Name'].strip() }}: List[{{ attribute['Type'] }}] = [None] * {{ attribute['Multiplicity'] }} 
+        {%- else %}
+        self.{{ attribute['Name'].strip() }}: {{ attribute['Type'] }} = None
+        {% endif -%}
+{% endfor %}

@@ -1,0 +1,28 @@
+{% set basic_types_mapping = {
+    'int': 'int32',
+    'float': 'single',
+    'double': 'double',
+    'char': 'char',
+    'string': 'string',
+    'uint8': 'uint8',
+    'int8': 'int8',
+    'uint16': 'uint16',
+    'int16': 'int16',
+    'uint32': 'uint32',
+    'int32': 'int32',
+    'uint64': 'uint64',
+    'int64': 'int64',
+    'boolean': 'logical'
+} %}
+
+% MATLAB script to create a structure named {{ name.strip() }}
+clear {{ name.strip() }};
+{% for attribute in attributes %}
+    {%- set mapped_type = basic_types_mapping.get(attribute['Type'], attribute['Type']) %}
+    {%- if attribute['Multiplicity'] is not none and attribute['Multiplicity'] == attribute['Multiplicity'] %}
+        {%- set size_str = '1, ' ~ attribute['Multiplicity'] %}
+    {% else %}
+        {%- set size_str = '1, 1' %}
+    {% endif %}
+{{ name.strip() }}.{{ attribute['Name'].strip() }} = zeros({{ size_str }});  % type: {{ mapped_type }}
+{% endfor %}

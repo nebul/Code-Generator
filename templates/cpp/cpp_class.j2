@@ -1,0 +1,41 @@
+{% set basic_types_mapping = {
+    'int': 'int',
+    'float': 'float',
+    'char': 'char',
+    'string': 'std::string',
+    'uint8': 'uint8_t',
+    'int8': 'int8_t',
+    'uint16': 'uint16_t',
+    'int16': 'int16_t',
+    'uint32': 'uint32_t',
+    'int32': 'int32_t',
+    'uint64': 'uint64_t',
+    'int64': 'int64_t',
+    'float32': 'float',
+    'float64': 'double',
+    'boolean': 'bool'
+} %}
+
+#ifndef {{ name.upper() }}_H
+#define {{ name.upper() }}_H
+
+#include <cstdint>
+
+class {{ name }} {
+public:
+    {{ name }}() {
+        // Constructor
+    }
+
+    {% for attribute in attributes %}
+        {%- set mapped_type = basic_types_mapping.get(attribute['Type'], attribute['Type']) %}
+        {%- if attribute['Multiplicity'] is not none and attribute['Multiplicity'] == attribute['Multiplicity'] %}
+            {%- set size_str = '[' ~ attribute['Multiplicity'] ~ 'U]' %}
+        {% else %}
+            {%- set size_str = '' %}
+        {% endif %}
+        {{ mapped_type }} {{ attribute['Name'] }}{{ size_str }};
+    {% endfor %}
+};
+
+#endif /* {{ name.upper() }}_H */
